@@ -71,6 +71,7 @@ class SetupCommand extends Command {
    */
   async handle () {
     try {
+      await this.generateBlueprint('create_acl_contexts_table')
       await this.generateBlueprint('create_permissions_table')
       await this.generateBlueprint('create_roles_table')
       await this.generateBlueprint('create_permission_role_table')

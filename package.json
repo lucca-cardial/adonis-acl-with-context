@@ -1,6 +1,6 @@
 {
-  "name": "adonis-acl",
-  "version": "1.1.1",
+  "name": "adonis-acl-with-context",
+  "version": "0.1",
   "description": "Adonis ACL system",
   "main": "src/Acl/index.js",
   "directories": {
@@ -68,14 +68,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enniel/adonis-acl.git"
+    "url": "git+https://github.com/lucca-cardial/adonis-acl.git"
   },
   "keywords": [
     "acl",
     "adonis"
   ],
   "bugs": {
-    "url": "https://github.com/enniel/adonis-acl/issues"
+    "url": "https://github.com/lucca-cardial/adonis-acl/issues"
   },
-  "homepage": "https://github.com/enniel/adonis-acl#readme"
+  "homepage": "https://github.com/lucca-cardial/adonis-acl#readme"
 }

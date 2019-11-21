@@ -19,23 +19,36 @@ module.exports = class HasPermission {
       context_id,
       resource_id
     }) {
-      let permissions = await this.permissions()
+      let permissions = this.permissions()
         .where("context_id", context_id)
-        .where("resource_id", resource_id)
-        .fetch();
+
+        if(resource_id) {
+          permissions.where("resource_id", resource_id)
+        }
+
+        permissions = await permissions.fetch();
+
       permissions = permissions.rows.map(({ slug }) => slug);
+      
       if (typeof this.roles === "function") {
-        const roles = await this.roles()
-          .where("context_id", context_id)
-          .where("resource_id", resource_id)
-          .fetch();
+        let roles = await this.roles().where("context_id", context_id)
+
+          if(resource_id) {
+            roles.where("resource_id", resource_id)
+          }
+
+        roles = await roles.fetch();
+        
         let rolesPermissions = [];
+
         for (let role of roles.rows) {
           const rolePermissions = await role.getPermissions();
           rolesPermissions = rolesPermissions.concat(rolePermissions);
         }
+
         permissions = _.uniq(permissions.concat(rolesPermissions));
       }
+
       return permissions;
     };
 

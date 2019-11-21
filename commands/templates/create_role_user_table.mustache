@@ -12,6 +12,7 @@ class RoleUserTableSchema extends Schema {
       table.foreign('user_id').references('id').on('users').onDelete('cascade')
       table.integer('contex_id').unsigned().index()
       table.foreign('contex_id').references('id').on('acl_contexts').onDelete('cascade')
+      table.integer('resource_id').unsigned().index()
       table.timestamps()
     })
   }

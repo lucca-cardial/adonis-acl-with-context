@@ -16,15 +16,19 @@ module.exports = class HasRole {
     };
 
     Model.prototype.getRoles = async function({ context_id, resource_id }) {
-      const roles = await this.roles()
-        .where("context_id", context_id)
-        .where("resource_id", resource_id)
-        .fetch();
+      let roles = await this.roles().where("context_id", context_id)
+      
+      if(resource_id) {
+        roles.where("resource_id", resource_id)
+      }
+      
+      roles = await roles.fetch();
+
       return roles.rows.map(({ slug }) => slug);
     };
 
     Model.prototype.is = async function(expression, identifiers) {
-      const roles = await this.getRoles(iden);
+      const roles = await this.getRoles(identifiers);
       return Acl.check(expression, operand => _.includes(roles, operand));
     };
   }

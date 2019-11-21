@@ -2,6 +2,10 @@
 const Model = use("Adonis/Src/Model");
 
 class Context extends Model {
+  static get table() {
+    return 'acl_contexts'
+  }
+  
   static get rules() {
     return {
       slug: "required|min:3|max:255|regex:^[a-zA-Z0-9_-]+$",

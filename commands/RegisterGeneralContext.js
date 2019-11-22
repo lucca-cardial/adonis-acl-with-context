@@ -50,7 +50,7 @@ class RegisterGeneralContext extends Command {
   async handle() {
     let context = await Context.findBy("slug", "general");
     if (context) {
-      this.success(`${this.icon("success")} context ${name} already exists.`);
+      this.warn(`${this.icon("warn")} context general already exists.`);
     } else {
       const data = {
         slug: "general",

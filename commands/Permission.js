@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /**
  * adonis-acl
@@ -6,9 +6,9 @@
  * MIT Licensed
  */
 
-const { Command } = require('@adonisjs/ace')
-const Permission = use('Adonis/Acl/Permission')
-const Database = use('Adonis/Src/Database')
+const { Command } = require("@adonisjs/ace");
+const Permission = use("Adonis/Acl/Permission");
+const Database = use("Adonis/Src/Database");
 
 class PermissionCommand extends Command {
   /**
@@ -20,8 +20,8 @@ class PermissionCommand extends Command {
    *
    * @return {String}
    */
-  static get signature () {
-    return 'acl:permission {slug} {name?} {description?}'
+  static get signature() {
+    return "acl:permission {slug} {name?} {description?}";
   }
 
   /**
@@ -32,8 +32,8 @@ class PermissionCommand extends Command {
    *
    * @return {String}
    */
-  static get description () {
-    return 'Create or update permission'
+  static get description() {
+    return "Create or update permission";
   }
 
   /**
@@ -47,20 +47,25 @@ class PermissionCommand extends Command {
    *
    * @return {void}
    */
-  async handle ({ slug, name, description }, { permissions }) {
-    name = name || slug
-    let permission = await Permission.findBy('slug', slug)
+  async handle({ slug, name, description }, { permissions }) {
+    name = name || slug;
+    let permission = await Permission.findBy("slug", slug);
     if (permission) {
       permission.merge({
-        name, description
-      })
-      await permission.save()
+        name,
+        description
+      });
+      await permission.save();
     } else {
-      permission = await Permission.create({ slug, name, description })
+      permission = await Permission.create({ slug, name, description });
     }
-    this.success(`${this.icon('success')} permission ${name} is updated.`)
-    Database.close()
+    this.success(`${this.icon("success")} permission ${name} is updated.`);
+    Database.close();
+  }
+
+  context() {
+    return this.belongsTo("Adonis/Acl/Context");
   }
 }
 
-module.exports = PermissionCommand
+module.exports = PermissionCommand;

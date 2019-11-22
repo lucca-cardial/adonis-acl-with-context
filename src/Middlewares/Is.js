@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /**
  * adonis-acl
@@ -6,21 +6,25 @@
  * MIT Licensed
  */
 
-const ForbiddenException = require('../Exceptions/ForbiddenException')
+const ForbiddenException = require("../Exceptions/ForbiddenException");
+const { ContextResolver } = require("../Resolver");
 
 class Is {
-  async handle ({ auth }, next, ...args) {
-    let expression = args[0]
-    if (Array.isArray(expression)) {
-      expression = expression[0]
-    }
-    const is = await auth.user.is(expression)
+  async handle({ auth, request, params }, next, ...args) {
+    const _params = args[0];
+
+    const expression = _params[0];
+
+    const payload = ContextResolver({ request, params, args: _params });
+
+    const is = await auth.user.is(expression, payload);
+
     if (!is) {
-      throw new ForbiddenException()
+      throw new ForbiddenException();
     }
 
-    await next()
+    await next();
   }
 }
 
-module.exports = Is
+module.exports = Is;

@@ -8,6 +8,7 @@
 
 const _ = require("lodash");
 const Acl = require("../Acl");
+const Context = use("Adonis/Acl/Context");
 
 module.exports = class HasPermission {
   register(Model) {
@@ -15,30 +16,39 @@ module.exports = class HasPermission {
       return this.belongsToMany("Adonis/Acl/Permission");
     };
 
-    Model.prototype.getPermissions = async function({
-      context_id,
-      resource_id
-    }) {
-      let permissions = this.permissions()
-        .where("context_id", context_id)
+    Model.prototype.getPermissions = async function(payload) {
+      const { context, resource_id } = payload;
 
-        if(resource_id) {
-          permissions.where("resource_id", resource_id)
-        }
+      const contextEntity = await Context.query()
+        .where("slug", context)
+        .first();
 
-        permissions = await permissions.fetch();
+      let context_id = null;
+
+      if (contextEntity) context_id = contextEntity.id;
+
+      let permissions = this.permissions().where(
+        "permission_user.contex_id",
+        context_id
+      );
+
+      if (resource_id) {
+        permissions.where("resource_id", resource_id);
+      }
+
+      permissions = await permissions.fetch();
 
       permissions = permissions.rows.map(({ slug }) => slug);
-      
-      if (typeof this.roles === "function") {
-        let roles = await this.roles().where("context_id", context_id)
 
-          if(resource_id) {
-            roles.where("resource_id", resource_id)
-          }
+      if (typeof this.roles === "function") {
+        let roles = this.roles().where("role_user.contex_id", context);
+
+        if (resource_id) {
+          roles.where("role_user.resource_id", resource_id);
+        }
 
         roles = await roles.fetch();
-        
+
         let rolesPermissions = [];
 
         for (let role of roles.rows) {
@@ -52,8 +62,8 @@ module.exports = class HasPermission {
       return permissions;
     };
 
-    Model.prototype.can = async function(expression, identifiers) {
-      const permissions = await this.getPermissions(identifiers);
+    Model.prototype.can = async function(expression, payload) {
+      const permissions = await this.getPermissions(payload);
       return Acl.check(expression, operand => _.includes(permissions, operand));
     };
 

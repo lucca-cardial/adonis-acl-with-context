@@ -28,7 +28,7 @@ module.exports = class HasRole {
 
       if (contextEntity) context_id = contextEntity.id;
 
-      let roles = this.roles().where("role_user.contex_id", context_id);
+      let roles = this.roles().where("role_user.context_id", context_id);
 
       if (resource_id) {
         roles.where("resource_id", resource_id);

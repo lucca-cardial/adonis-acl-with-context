@@ -28,7 +28,7 @@ module.exports = class HasPermission {
       if (contextEntity) context_id = contextEntity.id;
 
       let permissions = this.permissions().where(
-        "permission_user.contex_id",
+        "permission_user.context_id",
         context_id
       );
 
@@ -41,7 +41,7 @@ module.exports = class HasPermission {
       permissions = permissions.rows.map(({ slug }) => slug);
 
       if (typeof this.roles === "function") {
-        let roles = this.roles().where("role_user.contex_id", context);
+        let roles = this.roles().where("role_user.context_id", context);
 
         if (resource_id) {
           roles.where("role_user.resource_id", resource_id);

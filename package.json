@@ -1,6 +1,6 @@
 {
   "name": "adonis-acl-with-context",
-  "version": "0.1.6",
+  "version": "1.0",
   "description": "Adonis ACL with context system",
   "main": "src/Acl/index.js",
   "directories": {

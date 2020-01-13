@@ -13,12 +13,20 @@ const ContextResolver = ({ request, params, args }) => {
 
   if (context !== "general") {
     const resourceMap = args[2].split(".") || [];
+    const resourceKey = resourceMap[0];
+    const resourceValue = resourceMap[1];
 
     resource = () => {
-      if (resourceMap[0] === "request") {
-        return request.input(resourceMap[1]);
+      switch (resourceKey) {
+        case "request":
+          return request.input(resourceValue);
+        case "header":
+          return request.header(resourceValue);
+        case "params":
+          return params[resourceKey];
+        default:
+          throw new Error("ACLC001: Resource Map key not defined");
       }
-      return params[resourceMap[1]] || null;
     };
   }
 

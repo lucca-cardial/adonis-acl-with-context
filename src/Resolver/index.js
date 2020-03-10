@@ -7,11 +7,11 @@
  */
 
 const ContextResolver = ({ request, params, args }) => {
-  const context = args[1];
+  const context = args[1] || null;
 
   let resource = () => null;
-
-  if (context !== "general") {
+  
+  if (context) {
     const resourceMap = args[2].split(".") || [];
     const resourceKey = resourceMap[0];
     const resourceValue = resourceMap[1];
